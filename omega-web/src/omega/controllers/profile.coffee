@@ -4,6 +4,7 @@ angular.module('omega').controller 'ProfileCtrl', ($scope, $stateParams,
   name = $stateParams.name
   profileTemplates =
     'FixedProfile': 'profile_fixed.html'
+    'TunnelProfile': 'profile_tunnel.html'
     'PacProfile': 'profile_pac.html'
     'VirtualProfile': 'profile_virtual.html'
     'SwitchProfile': 'profile_switch.html'

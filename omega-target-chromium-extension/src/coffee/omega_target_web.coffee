@@ -23,6 +23,7 @@ angular.module('omegaTarget', []).factory 'omegaTarget', ($q) ->
       err.name = obj.name
       err.stack = obj.stack
       err.original = obj.original
+      err.code = obj.code
       err
     else
       obj
@@ -137,6 +138,8 @@ angular.module('omegaTarget', []).factory 'omegaTarget', ($q) ->
       callBackground('patch', patch).then omegaTarget.refresh
     resetOptions: (opt) ->
       callBackground('reset', opt).then omegaTarget.refresh
+    tunnelRequest: (command, fields = {}) ->
+      callBackground('tunnelRequest', command, fields)
     updateProfile: (name, opt_bypass_cache) ->
       callBackground('updateProfile', name, opt_bypass_cache).then((results) ->
         for own key, value of results

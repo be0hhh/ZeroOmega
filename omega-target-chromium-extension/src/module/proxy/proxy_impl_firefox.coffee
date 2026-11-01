@@ -81,7 +81,10 @@ class FirefoxProxyImpl extends ProxyImpl
         if Array.isArray(result)
           proxy = result[2]
           auth = result[3]
-          return @proxyInfo(proxy, auth, profile.proxyDNS) if proxy
+          if proxy
+            proxyDNS = profile.profileType == 'TunnelProfile' or
+              profile.proxyDNS
+            return @proxyInfo(proxy, auth, proxyDNS)
           next = result[0]
         else if result.profileName
           next = OmegaPac.Profiles.nameAsKey(result.profileName)

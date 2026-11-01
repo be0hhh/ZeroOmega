@@ -29,6 +29,14 @@ form(ng-submit='newProfile.$valid && $close(profile)' name='newProfile')
         .help-block {{'options_profileDescFixedProfile' | tr}}
     .radio
       label
+        input(type='radio' name='profile-new-type' value='TunnelProfile' ng-model='profile.profileType')
+        span.profile-type
+          span.glyphicon(ng-class='profileIcons["TunnelProfile"]')
+          = ' '
+          span {{'options_profileTypeTunnelProfile' | tr}}
+        .help-block {{'options_profileDescTunnelProfile' | tr}}
+    .radio
+      label
         input(type='radio', name='profile-new-type', value='SwitchProfile' ng-model='profile.profileType')
         span.profile-type
           span.glyphicon(ng-class='profileIcons["SwitchProfile"]')

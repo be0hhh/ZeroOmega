@@ -30,6 +30,9 @@ decorateCustomBuiltinProfiles = (profile, options = {}) ->
     )
     profile.color = customBuiltinProfiles[key].color
 
+# Runtime authority, deliberately absent from settings, sync and PAC exports.
+tunnelVerifications = Object.create(null)
+
 module.exports = exports =
   builtinProfiles:
     '+direct':
@@ -87,6 +90,51 @@ module.exports = exports =
         "#{exports.pacProtocols[proxy.scheme]} #{proxy.host}:#{proxy.port}"
     else
       'DIRECT'
+
+  # Tunnel profiles contain only a reference to a native configuration. Never
+  # accept a remote host or an invalid port from imported/synced settings.
+  tunnelGeneration: 0
+  setTunnelVerification: (configId, status) ->
+    previous = tunnelVerifications[configId]
+    next = null
+    if status?.configId == configId and
+        status.state in ['connecting', 'connected'] and
+        status.protocol in ['wireguard', 'amneziawg'] and
+        typeof status.port == 'number' and status.port % 1 == 0 and
+        status.port >= 1024 and status.port <= 65535
+      next = {protocol: status.protocol, port: status.port}
+    return false if JSON.stringify(previous ? null) == JSON.stringify(next)
+    if next
+      tunnelVerifications[configId] = next
+    else
+      delete tunnelVerifications[configId]
+    exports._invalidateTunnelCaches()
+    return true
+  clearTunnelVerifications: ->
+    return false unless Object.keys(tunnelVerifications).length
+    tunnelVerifications = Object.create(null)
+    exports._invalidateTunnelCaches()
+    return true
+  _invalidateTunnelCaches: ->
+    exports.tunnelGeneration++
+  validTunnelReference: (profile) ->
+    tunnel = profile.tunnel
+    return tunnel? and typeof tunnel.configId == 'string' and
+      /^[a-zA-Z0-9_-]{1,128}$/.test(tunnel.configId) and
+      tunnel.protocol in ['wireguard', 'amneziawg'] and
+      typeof tunnel.port == 'number' and tunnel.port % 1 == 0 and
+      tunnel.port >= 1024 and tunnel.port <= 65535
+  tunnelProxy: (profile) ->
+    tunnel = profile.tunnel
+    valid = exports.validTunnelReference(profile)
+    verified = tunnelVerifications[tunnel?.configId]
+    valid = valid and verified? and verified.port == tunnel.port and
+      verified.protocol == tunnel.protocol
+    return {
+      scheme: 'socks5'
+      host: '127.0.0.1'
+      port: if valid then tunnel.port else 9
+    }
 
   isFileUrl: (url) -> !!(url?.substr(0, 5).toUpperCase() == 'FILE:')
 
@@ -237,7 +285,8 @@ module.exports = exports =
     handler = exports._handler(opt_profileType)
     cache.compiled = handler.compile.call(exports, profile, cache)
 
-  _profileCache: new AttachedCache (profile) -> profile.revision
+  _profileCache: new AttachedCache (profile) ->
+    "#{profile.revision}:#{exports.tunnelGeneration}"
 
   _handler: (profileType) ->
     if typeof profileType != 'string'
@@ -260,6 +309,16 @@ module.exports = exports =
       includable: true
       compile: (profile) ->
         return new U2.AST_String(value: @pacResult())
+    'TunnelProfile':
+      includable: true
+      match: (profile, request) ->
+        proxy = @tunnelProxy(profile)
+        # Do not use pacResult: its optional SOCKS compatibility fallback must
+        # not change the protocol or introduce a direct path for tunnels.
+        return ["SOCKS5 127.0.0.1:#{proxy.port}", '', proxy, undefined]
+      compile: (profile) ->
+        proxy = @tunnelProxy(profile)
+        new U2.AST_String(value: "SOCKS5 127.0.0.1:#{proxy.port}")
     'FixedProfile':
       includable: true
       create: (profile) ->

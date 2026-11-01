@@ -28,6 +28,12 @@ angular.module('omega').directive 'omegaUpload', ->
     input = element[0]
     element.on 'change', ->
       if input.files.length > 0 and input.files[0].name.length > 0
+        maxBytes = Number(attrs.omegaMaxBytes)
+        if maxBytes > 0 and input.files[0].size > maxBytes
+          input.value = ''
+          scope.$apply ->
+            scope.error({'$error': {code: 'FILE_TOO_LARGE'}})
+          return
         reader = new FileReader()
         reader.addEventListener 'load', (e) ->
           scope.$apply ->

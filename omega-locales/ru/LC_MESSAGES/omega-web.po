@@ -1415,3 +1415,99 @@ msgstr ""
 "sw.en.html'>свободное программное обеспечение</a>, лицензируемое на "
 "условиях <a href='https://www.gnu.org/licenses/gpl.html'>GNU General Public "
 "License</a> Версии 3 или более поздней."
+
+msgid "options_profileTypeTunnelProfile"
+msgstr "WireGuard / AmneziaWG"
+
+msgid "options_profileDescTunnelProfile"
+msgstr "Импорт .conf и подключение выбранных сайтов через туннель. Требуется Windows-помощник."
+
+msgid "options_tunnel_connection"
+msgstr "Подключение"
+
+msgid "options_tunnel_routingHelp"
+msgstr "Выберите этот профиль в правилах auto switch или в меню расширения для подключения всего браузера."
+
+msgid "options_tunnel_status"
+msgstr "Состояние:"
+
+msgid "options_tunnel_working"
+msgstr "Подождите…"
+
+msgid "options_tunnel_state_disconnected"
+msgstr "Отключено"
+
+msgid "options_tunnel_state_connecting"
+msgstr "Подключение; ожидается ответ сервера"
+
+msgid "options_tunnel_state_connected"
+msgstr "Подключено"
+
+msgid "options_tunnel_state_error"
+msgstr "Ошибка подключения"
+
+msgid "options_tunnel_connect"
+msgstr "Подключить"
+
+msgid "options_tunnel_disconnect"
+msgstr "Отключить"
+
+msgid "options_tunnel_refresh"
+msgstr "Обновить состояние"
+
+msgid "options_tunnel_failClosed"
+msgstr "При недоступности туннеля назначенные ему запросы блокируются. Остальные правила продолжают работать."
+
+msgid "options_tunnel_empty"
+msgstr "Импортируйте конфигурацию для настройки профиля."
+
+msgid "options_tunnel_configuration"
+msgstr "Конфигурация"
+
+msgid "options_tunnel_configHelp"
+msgstr "WireGuard и AmneziaWG определяются по параметрам конфигурации. Максимальный размер: 256 КиБ."
+
+msgid "options_tunnel_chooseFile"
+msgstr "Выбрать файл .conf"
+
+msgid "options_tunnel_pasteConfig"
+msgstr "Или вставить конфигурацию"
+
+msgid "options_tunnel_secretHelp"
+msgstr "Помощник хранит ключи с защитой Windows DPAPI. Текст очищается после импорта и не включается в резервные копии расширения."
+
+msgid "options_tunnel_importConfig"
+msgstr "Импортировать конфигурацию"
+
+msgid "options_tunnel_removeConfig"
+msgstr "Удалить конфигурацию"
+
+msgid "options_tunnel_applyHelp"
+msgstr "Нажмите «Применить изменения», чтобы сохранить профиль и правила маршрутизации."
+
+msgid "options_tunnel_immediateHelp"
+msgstr "Замена и удаление конфигурации, подключение и отключение сразу применяются в помощнике."
+
+msgid "options_tunnel_removeConfirm"
+msgstr "Удалить эту конфигурацию из помощника? Запросы через неё будут блокироваться до повторного импорта."
+
+msgid "options_tunnel_configReferenced"
+msgstr "Эту конфигурацию использует другой профиль. Перед удалением уберите эту ссылку."
+
+msgid "options_tunnel_helperUnavailable"
+msgstr "Windows-помощник недоступен или несовместим."
+
+msgid "options_tunnel_installHelp"
+msgstr "Установите помощник через install.ps1 из Windows-комплекта и нажмите «Обновить состояние». Управление выполняется здесь, без отдельного окна приложения."
+
+msgid "options_tunnel_operationFailed"
+msgstr "Не удалось выполнить операцию. Проверьте установку помощника и конфигурацию."
+
+msgid "options_tunnel_configTooLarge"
+msgstr "Размер конфигурации не должен превышать 256 КиБ."
+
+msgid "options_tunnel_fileError"
+msgstr "Не удалось прочитать файл. Выберите доступный файл .conf."
+
+msgid "options_tunnel_configMissing"
+msgstr "На этом компьютере нет конфигурации. Импортируйте файл .conf повторно, чтобы восстановить этот профиль."

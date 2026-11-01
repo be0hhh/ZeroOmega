@@ -57,6 +57,7 @@ class ProxyImpl
           revision = _profile.sha256
         _profile.name + '_' + revision
     ).join(',')
+    profilePacKey += ':tunnels:' + OmegaPac.Profiles.tunnelGeneration
     if profilePac?[profilePacKey]
       return profilePac[profilePacKey]
     ast = OmegaPac.PacGenerator.script(options, profile,

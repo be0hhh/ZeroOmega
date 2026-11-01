@@ -426,6 +426,7 @@ zeroBackground = (zeroStorage, opts) ->
       {
         _error: 'error'
         name: obj.name
+        code: obj.code
         message: obj.message
         stack: obj.stack
         original: obj
@@ -457,6 +458,19 @@ zeroBackground = (zeroStorage, opts) ->
       ])
   chrome.runtime.onMessage.addListener (request, sender, respond) ->
     return unless request and request.method
+    if request.method == 'tunnelRequest'
+      # Content scripts and other extensions must never control the native
+      # host, even when they can reach the generic background RPC listener.
+      trustedUrl = chrome.runtime.getURL('options.html')
+      if sender.id != chrome.runtime.id or
+          sender.url?.split(/[?#]/)[0] != trustedUrl
+        respond(error: {
+          _error: 'error'
+          name: 'Error'
+          code: 'FORBIDDEN'
+          message: 'Open the extension settings first.'
+        })
+        return false
     options.ready.then ->
       if request.method == 'resetAllOptions'
         target = globalThis

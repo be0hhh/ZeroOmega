@@ -9,6 +9,7 @@
     'SystemProfile': 'glyphicon-off',
     'AutoDetectProfile': 'glyphicon-file',
     'FixedProfile': 'glyphicon-globe',
+    'TunnelProfile': 'glyphicon-lock',
     'PacProfile': 'glyphicon-file',
     'VirtualProfile': 'glyphicon-question-sign',
     'RuleListProfile': 'glyphicon-list',
@@ -16,6 +17,7 @@
   };
   var orderForType = {
     'FixedProfile': -2000,
+    'TunnelProfile': -1500,
     'PacProfile': -1000,
     'VirtualProfile': 1000,
     'SwitchProfile': 2000,

@@ -6,6 +6,7 @@ WebRequestMonitor = require('./web_request_monitor')
 ChromePort = require('./chrome_port')
 fetchUrl = require('./fetch_url')
 Url = require('url')
+TunnelClient = require('./tunnel_client')
 
 TEMPPROFILEKEY = 'tempProfileState'
 
@@ -55,6 +56,8 @@ class ChromeOptions extends OmegaTarget.Options
 
     chrome.alarms.onAlarm.addListener (alarm) =>
       switch alarm.name
+        when 'omega.tunnelsReconnect'
+          @ready.then => @_connectActiveTunnels()
         when 'omega.updateProfile'
           @ready.then( =>
             @updateProfile()
@@ -72,6 +75,7 @@ class ChromeOptions extends OmegaTarget.Options
                   url: chrome.runtime.getURL('options.html#/ui')
                 )
       )
+
     )
 
     chrome.action.onClicked.addListener (tab) =>
@@ -99,6 +103,107 @@ class ChromeOptions extends OmegaTarget.Options
             else
               chrome.tabs.reload(tab.id)
       )
+
+  # This method is exposed only to our options page by background.coffee.
+  # Config text travels directly to the native host, never through options,
+  # request logs, browser storage, sync or export.
+  tunnelRequest: (command, fields = {}) ->
+    unless @_tunnelClient
+      @_tunnelClient = new TunnelClient(chrome.runtime, Promise)
+      @_tunnelClient.onDisconnect = =>
+        @_tunnelConnectionGeneration = (@_tunnelConnectionGeneration ? 0) + 1
+        if OmegaPac.Profiles.clearTunnelVerifications()
+          @_reapplyTunnelPolicy().catch (error) => @log.error(error)
+    @_pausedTunnels ?= {}
+    @_tunnelOperationGeneration ?= {}
+    if fields.configId
+      if command == 'disconnect'
+        @_pausedTunnels[fields.configId] = true
+      else if command == 'connect'
+        delete @_pausedTunnels[fields.configId]
+      if command in ['import', 'disconnect', 'delete']
+        @_tunnelOperationGeneration[fields.configId] =
+          (@_tunnelOperationGeneration[fields.configId] ? 0) + 1
+    generation = @_tunnelOperationGeneration[fields.configId] ? 0
+    revoked = false
+    if fields.configId and command in ['import', 'disconnect', 'delete']
+      revoked = OmegaPac.Profiles.setTunnelVerification(fields.configId, null)
+    ready = if revoked then @_reapplyTunnelPolicy() else Promise.resolve()
+    connectionGeneration = null
+    ready.then(=>
+      connectionGeneration = @_tunnelConnectionGeneration ? 0
+      @_tunnelClient.request(command, fields)
+    ).then (result) =>
+      if connectionGeneration != (@_tunnelConnectionGeneration ? 0)
+        error = new Error('The Windows helper disconnected. Try again.')
+        error.code = 'NATIVE_DISCONNECTED'
+        throw error
+      if command == 'version' and result.protocolVersion != 1
+        error = new Error('Update the ZeroOmega WG Windows helper.')
+        error.code = 'VERSION_MISMATCH'
+        throw error
+      if command in ['connect', 'status']
+        # A response from before Disconnect or a replacement import cannot
+        # authorize that stale configuration again.
+        return result if generation !=
+          (@_tunnelOperationGeneration[fields.configId] ? 0)
+        if result.configId != fields.configId
+          throw new Error('The helper returned a different configuration.')
+        changed = OmegaPac.Profiles.setTunnelVerification(fields.configId,
+          result)
+        return @_reapplyTunnelPolicy().then(-> result) if changed
+      return result
+    .catch (error) =>
+      throw error if generation !=
+        (@_tunnelOperationGeneration[fields.configId] ? 0)
+      if fields.configId and
+          OmegaPac.Profiles.setTunnelVerification(fields.configId, null)
+        return @_reapplyTunnelPolicy().then -> throw error
+      throw error
+
+  _reapplyTunnelPolicy: ->
+    meta = @currentProfile()
+    return Promise.resolve() unless meta
+    profile = if @_tempProfileActive then @_tempProfile else meta
+    @proxyImpl.applyProfile(profile, meta, @_options)
+
+  applyProfile: (name, args) ->
+    # Install the fail-closed proxy policy before starting any network work.
+    super(name, args).then (result) =>
+      return result if args?.proxy == false
+      @_connectActiveTunnels().then -> result
+
+  _connectActiveTunnels: ->
+    profile = if @_tempProfileActive then @_tempProfile else @currentProfile()
+    return Promise.resolve() unless profile
+    references = OmegaPac.Profiles.allReferenceSet(profile, @_options,
+      profileNotFound: @_profileNotFound.bind(this))
+    pending = []
+    seen = {}
+    errors = {}
+    for own key, name of references
+      tunnelProfile = OmegaPac.Profiles.byKey(key, @_options)
+      continue unless tunnelProfile?.profileType == 'TunnelProfile'
+      continue unless OmegaPac.Profiles.validTunnelReference(tunnelProfile)
+      tunnel = tunnelProfile.tunnel
+      continue if @_pausedTunnels?[tunnel.configId]
+      continue if seen[tunnel.configId]
+      seen[tunnel.configId] = true
+      do (tunnel) =>
+        pending.push(@tunnelRequest('connect', configId: tunnel.configId)
+          .then (result) ->
+            if result.port != tunnel.port or result.protocol != tunnel.protocol
+              throw new Error('Reimport this configuration on this computer.')
+          .catch (error) ->
+            errors[tunnel.configId] = error.message
+        )
+    if pending.length
+      chrome.alarms.create('omega.tunnelsReconnect', periodInMinutes: 1)
+    else
+      chrome.alarms.clear('omega.tunnelsReconnect')
+    # Do not disconnect profiles on switch: the per-user broker can also be
+    # serving another browser. Explicit Disconnect remains available in UI.
+    Promise.all(pending).then => @_state.set(tunnelErrors: errors)
 
   init: (startupCheck) ->
     super(startupCheck)
@@ -315,7 +420,13 @@ class ChromeOptions extends OmegaTarget.Options
     if type.indexOf('RuleListProfile') >= 0
       type = 'RuleListProfile'
 
-    if type == 'FixedProfile'
+    if type == 'TunnelProfile'
+      protocol = if profile.tunnel?.protocol == 'amneziawg'
+        'AmneziaWG'
+      else
+        'WireGuard'
+      return protocol + ' — local Windows helper'
+    else if type == 'FixedProfile'
       @printFixedProfile(profile)
     else if type == 'PacProfile' and profile.pacUrl
       profile.pacUrl

@@ -1,0 +1,58 @@
+div(ng-controller='TunnelProfileCtrl')
+  section.settings-group
+    h3 {{'options_tunnel_connection' | tr}}
+    p.help-block {{'options_tunnel_routingHelp' | tr}}
+    p(role='status' aria-live='polite' aria-atomic='true')
+      strong {{'options_tunnel_status' | tr}}
+      = ' '
+      span {{tunnelStatusKey() | tr}}
+      span(ng-if='tunnelEditor.busy')
+        = ' — '
+        | {{'options_tunnel_working' | tr}}
+    p(ng-if='profile.tunnel')
+      strong {{profile.tunnel.protocol == 'wireguard' ? 'WireGuard' : 'AmneziaWG'}}
+      = ' · '
+      code 127.0.0.1:{{profile.tunnel.port}}
+    .alert.alert-danger.width-limit(ng-if='tunnelEditor.error' role='alert')
+      | {{tunnelEditor.error}}
+    .alert.alert-info.width-limit(ng-if='tunnelEditor.helperUnavailable')
+      p {{'options_tunnel_installHelp' | tr}}
+    p(ng-if='!profile.tunnel') {{'options_tunnel_empty' | tr}}
+    p
+      button.btn.btn-primary(type='button' ng-click='tunnelConnect()'
+        ng-disabled='tunnelEditor.busy || !profile.tunnel || tunnelEditor.state == "connected" || tunnelEditor.state == "connecting"')
+        span.glyphicon.glyphicon-off(aria-hidden='true')
+        = ' '
+        | {{'options_tunnel_connect' | tr}}
+      = ' '
+      button.btn.btn-default(type='button' ng-click='tunnelDisconnect()'
+        ng-disabled='tunnelEditor.busy || !profile.tunnel || tunnelEditor.state == "disconnected"')
+        | {{'options_tunnel_disconnect' | tr}}
+      = ' '
+      button.btn.btn-default(type='button' ng-click='tunnelRefresh()' ng-disabled='tunnelEditor.busy')
+        | {{'options_tunnel_refresh' | tr}}
+    p.help-block {{'options_tunnel_failClosed' | tr}}
+  section.settings-group
+    h3 {{'options_tunnel_configuration' | tr}}
+    p.help-block {{'options_tunnel_configHelp' | tr}}
+    .form-group
+      label(for='tunnel-config-file') {{'options_tunnel_chooseFile' | tr}}
+      input#tunnel-config-file(type='file' accept='.conf,text/plain'
+        omega-upload='tunnelLoad($content)' omega-error='tunnelFileError($error)'
+        omega-max-bytes='262144' ng-disabled='tunnelEditor.busy'
+        aria-describedby='tunnel-config-help')
+    .form-group.width-limit
+      label(for='tunnel-config-text') {{'options_tunnel_pasteConfig' | tr}}
+      textarea#tunnel-config-text.form-control.monospace(rows='9'
+        ng-model='tunnelEditor.config' ng-disabled='tunnelEditor.busy'
+        autocomplete='off' spellcheck='false' aria-describedby='tunnel-config-help')
+      p#tunnel-config-help.help-block {{'options_tunnel_secretHelp' | tr}}
+    p
+      button.btn.btn-primary(type='button' ng-click='tunnelImport()' ng-disabled='!tunnelCanImport()')
+        | {{'options_tunnel_importConfig' | tr}}
+      = ' '
+      button.btn.btn-danger(type='button' ng-if='profile.tunnel' ng-click='tunnelRemove()'
+        ng-disabled='tunnelEditor.busy')
+        | {{'options_tunnel_removeConfig' | tr}}
+    p.help-block {{'options_tunnel_applyHelp' | tr}}
+    p.help-block(ng-if='profile.tunnel') {{'options_tunnel_immediateHelp' | tr}}

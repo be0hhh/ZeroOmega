@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ZeroOmega WG — установка расширения / browser setup</title>
+  <style>
+    body { margin: 0; color: #20252b; background: #fff; font: 16px/1.6 system-ui, sans-serif; }
+    main { max-width: 760px; margin: 40px auto; padding: 0 24px 40px; }
+    h1 { line-height: 1.2; font-size: 32px; } h2 { font-size: 23px; margin-top: 32px; }
+    li { margin: 12px 0; } a { color: #145aa8; text-underline-offset: 3px; }
+    code { overflow-wrap: anywhere; font: 14px/1.6 ui-monospace, monospace; background: #f2f4f6; padding: 3px 6px; }
+    a:focus-visible { outline: 3px solid #145aa8; outline-offset: 3px; }
+    section { margin-top: 40px; padding-top: 16px; border-top: 1px solid #d5dce3; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>ZeroOmega WG установлен</h1>
+  <p>Локальный помощник запущен. Осталось один раз добавить расширение в браузер.
+    После этого импорт и подключение доступны в настройках ZeroOmega WG.</p>
+  <h2>Google Chrome</h2>
+  <ol>
+    <li>Откройте <code>chrome://extensions</code> и включите «Режим разработчика».</li>
+    <li>Нажмите «Загрузить распакованное расширение» и выберите установленную папку:<br>
+      <code>{{CHROME_PATH}}</code></li>
+    <li>Отключите исходный ZeroOmega, чтобы прокси управляло одно расширение.</li>
+    <li>Откройте настройки ZeroOmega WG → «Новый профиль» → <strong>WireGuard / AmneziaWG</strong>.
+      Импортируйте <code>.conf</code> и нажмите «Применить изменения».</li>
+    <li>В auto switch выберите созданный профиль для нужных доменов, а профиль по умолчанию — «Напрямую».</li>
+  </ol>
+  <p>Установщик можно удалить или переслать. Папку установленного приложения оставьте на месте.</p>
+  <h2>Firefox</h2>
+  <p>В папке <code>firefox</code> установлен неподписанный XPI. Для постоянного использования
+    в обычном Firefox нужна подпись Mozilla, которую можно получить без публикации в каталоге.
+    Для разработки доступна временная загрузка через <code>about:debugging</code>.</p>
+  <p><a href="README.ru.md">Полная инструкция</a> · <a href="firefox/">Файлы Firefox</a> ·
+    <a href="source/">Исходники и патч</a></p>
+  <section lang="en">
+    <h2>ZeroOmega WG is installed</h2>
+    <p>The companion is running. Add the browser extension once:</p>
+    <ol>
+      <li>Open <code>chrome://extensions</code> and enable <strong>Developer mode</strong>.</li>
+      <li>Select <strong>Load unpacked</strong> and choose <code>{{CHROME_PATH}}</code>.</li>
+      <li>Disable the original ZeroOmega. Create a <strong>WireGuard / AmneziaWG</strong> profile,
+        import your <code>.conf</code>, then apply changes.</li>
+      <li>Use auto switch rules for selected domains; keep <strong>Direct</strong> as the default.</li>
+    </ol>
+    <p>You may delete or share the downloaded installer. Keep the installed application directory.
+      Firefox requires a Mozilla-signed XPI for permanent installation; this kit contains an unsigned XPI.</p>
+    <p><a href="README.en.md">Full English instructions</a></p>
+  </section>
+</main>
+</body>
+</html>

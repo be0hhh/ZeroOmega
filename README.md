@@ -1,6 +1,23 @@
 ZeroOmega, forked from SwitchyOmega compatible with manifest v3
 ============
 
+## ZeroOmega WG — personal fork
+
+This branch adds WireGuard and AmneziaWG `.conf` profiles to the existing
+ZeroOmega interface and auto switch rules. The Windows companion keeps tunnel
+keys outside the extension and exposes a separate local proxy for each profile.
+Ordinary proxy profiles continue to work without the companion.
+
+For Windows sharing, build or use `dist/ZeroOmega-WG-Setup.exe`: one executable
+installs and starts the companion and puts browser files in a permanent location.
+Adding the extension in Chrome and obtaining the Firefox signature remain browser
+installation steps described below.
+
+See [installation and build instructions (English)](docs/WIREGUARD.en.md) or
+[установка и сборка (русский)](docs/WIREGUARD.ru.md). The links below refer to
+the original ZeroOmega releases, **not** this fork. Firefox builds of this fork
+require their own Mozilla signature for permanent installation.
+
 [Chrome Web Store](https://chromewebstore.google.com/detail/pfnededegaaopdmhkdmcofjmoldfiped)
 
 [Microsoft Edge Addons](https://microsoftedge.microsoft.com/addons/detail/zeroomegaproxy-switchy-/dmaldhchmoafliphkijbfhaomcgglmgd)

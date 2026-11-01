@@ -1368,3 +1368,99 @@ msgstr "ZeroOmega is made possible by the <a href='https://github.com/zero-peak/
 
 msgid "about_license"
 msgstr "ZeroOmega is <a href='https://www.gnu.org/philosophy/free-sw.en.html'>free software</a> licensed under <a href='https://www.gnu.org/licenses/gpl.html'>GNU General Public License</a> Version 3 or later."
+
+msgid "options_profileTypeTunnelProfile"
+msgstr "WireGuard / AmneziaWG"
+
+msgid "options_profileDescTunnelProfile"
+msgstr "Import a .conf file and route selected websites through a tunnel. Requires the Windows companion."
+
+msgid "options_tunnel_connection"
+msgstr "Tunnel connection"
+
+msgid "options_tunnel_routingHelp"
+msgstr "Choose this profile in auto switch rules, or select it in the extension menu to route the browser through it."
+
+msgid "options_tunnel_status"
+msgstr "Status:"
+
+msgid "options_tunnel_working"
+msgstr "Please wait…"
+
+msgid "options_tunnel_state_disconnected"
+msgstr "Disconnected"
+
+msgid "options_tunnel_state_connecting"
+msgstr "Connecting; waiting for a handshake"
+
+msgid "options_tunnel_state_connected"
+msgstr "Connected"
+
+msgid "options_tunnel_state_error"
+msgstr "Connection error"
+
+msgid "options_tunnel_connect"
+msgstr "Connect"
+
+msgid "options_tunnel_disconnect"
+msgstr "Disconnect"
+
+msgid "options_tunnel_refresh"
+msgstr "Refresh status"
+
+msgid "options_tunnel_failClosed"
+msgstr "When this tunnel is unavailable, requests assigned to it are blocked. Other rules keep working."
+
+msgid "options_tunnel_empty"
+msgstr "Import a configuration to set up this profile."
+
+msgid "options_tunnel_configuration"
+msgstr "Configuration"
+
+msgid "options_tunnel_configHelp"
+msgstr "WireGuard and AmneziaWG are detected from the configuration. Maximum file size: 256 KiB."
+
+msgid "options_tunnel_chooseFile"
+msgstr "Choose a .conf file"
+
+msgid "options_tunnel_pasteConfig"
+msgstr "Or paste the configuration"
+
+msgid "options_tunnel_secretHelp"
+msgstr "Keys are stored by the Windows companion using DPAPI protection. Configuration text is cleared after import and is not included in extension backups."
+
+msgid "options_tunnel_importConfig"
+msgstr "Import configuration"
+
+msgid "options_tunnel_removeConfig"
+msgstr "Remove configuration"
+
+msgid "options_tunnel_applyHelp"
+msgstr "Click Apply changes to save the profile and routing rules."
+
+msgid "options_tunnel_immediateHelp"
+msgstr "Replacing or removing a configuration and connecting or disconnecting take effect immediately in the companion."
+
+msgid "options_tunnel_removeConfirm"
+msgstr "Remove this protected configuration from the companion? Requests using it will be blocked until a configuration is imported again."
+
+msgid "options_tunnel_configReferenced"
+msgstr "Another profile uses this configuration. Remove that reference before deleting it."
+
+msgid "options_tunnel_helperUnavailable"
+msgstr "The Windows companion is unavailable or incompatible."
+
+msgid "options_tunnel_installHelp"
+msgstr "Install the companion with install.ps1 from the Windows kit, then click Refresh status. The extension can manage it without a separate application window."
+
+msgid "options_tunnel_operationFailed"
+msgstr "The operation failed. Check the companion installation and configuration."
+
+msgid "options_tunnel_configTooLarge"
+msgstr "The configuration must not exceed 256 KiB."
+
+msgid "options_tunnel_fileError"
+msgstr "Unable to read the configuration file. Select a readable .conf file."
+
+msgid "options_tunnel_configMissing"
+msgstr "This configuration is not stored on this computer. Import the .conf file again to restore this profile."

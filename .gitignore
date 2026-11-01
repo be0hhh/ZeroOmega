@@ -3,3 +3,11 @@ bower_components
 package-lock.json
 *-release.zip
 *.swp
+
+# Local build outputs for the WG companion and distribution kit.
+/dist/
+/native-helper/zeroomega-wg.exe
+/native-helper/zeroomega-wg
+/native-helper/*.test
+/native-helper/coverage.out
+__pycache__/

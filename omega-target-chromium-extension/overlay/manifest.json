@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Proxy SwitchyOmega 3 (ZeroOmega)",
-  "version": "3.5.2",
+  "name": "ZeroOmega WG",
+  "version": "3.5.2.1",
   "description": "__MSG_manifest_app_description__",
   "icons": {
     "16": "img/icons/omega-action-16.png",
@@ -34,7 +34,11 @@
     "open_in_tab": true
   },
   "commands": {
-    "_execute_action": { "suggested_key": { "default": "Alt+Shift+O" } }
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Alt+Shift+O"
+      }
+    }
   },
   "permissions": [
     "proxy",
@@ -44,7 +48,11 @@
     "unlimitedStorage",
     "webRequest",
     "webRequestAuthProvider",
-    "contextMenus"
+    "contextMenus",
+    "nativeMessaging"
   ],
-  "host_permissions": ["<all_urls>"]
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqbFaG1YYT+lgw5D8jutxaBcYWAzC305AI9D+vGRc+Et46bVksFGHY2p42fVOIw0rF/sMVSLboKLftPd8JUkuFPTyafsREyvTZvlGzitvxQgPHxA5UEf4N80cll/KwXyDLFTBgE+PYklrSB4AgpjM5k5uEm88jGnDnWO6HWMBiViz62pKC61pDxKllDBAXnKBIqyt99FUn7xKYrrD7OkJH1YTps0NCzOWY11OXNExrpH8S/1Q7zC5PeZrtOiEmkqIfcc4s4eEavY3dyFPO8VLDb74xdDDXYNK0iDtPrEVvz3irlc5Vxv4B7cEpUlqAYRDGk2nM/iIlzjS/WTu6JefrwIDAQAB"
 }

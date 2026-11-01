@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Proxy SwitchyOmega 3 (ZeroOmega)",
-  "version": "3.5.2",
+  "name": "ZeroOmega WG",
+  "version": "3.5.2.1",
   "description": "__MSG_manifest_app_description__",
   "icons": {
     "16": "img/icons/omega-action-16.png",
@@ -23,7 +23,9 @@
     "default_popup": "popup/index.html"
   },
   "background": {
-    "scripts": ["x-background.js"],
+    "scripts": [
+      "x-background.js"
+    ],
     "type": "module"
   },
   "minimum_chrome_version": "88",
@@ -33,7 +35,11 @@
     "open_in_tab": true
   },
   "commands": {
-    "_execute_action": { "suggested_key": { "default": "Alt+Shift+O" } }
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Alt+Shift+O"
+      }
+    }
   },
   "permissions": [
     "proxy",
@@ -43,13 +49,21 @@
     "unlimitedStorage",
     "webRequest",
     "webRequestBlocking",
-    "contextMenus"
+    "contextMenus",
+    "nativeMessaging"
   ],
-  "host_permissions": ["<all_urls>"],
+  "host_permissions": [
+    "<all_urls>"
+  ],
   "browser_specific_settings": {
     "gecko": {
-      "id": "suziwen1@gmail.com",
-      "strict_min_version": "112.0"
+      "id": "zeroomega-wg@local.invalid",
+      "strict_min_version": "112.0",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
     }
   }
 }
