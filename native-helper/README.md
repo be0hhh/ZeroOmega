@@ -62,6 +62,8 @@ promise that every destination is reachable.
   multiple peers, IPv4/IPv6, preshared keys and persistent keepalives.
 - AmneziaWG junk packets, header ranges, S1–S4, custom I1–I5 packets, AWG 3 header
   protection and timing parameters understood by the pinned core.
+- `RandomTrailers` and `DisableCookies` accept `on/off`, `true/false`, and `1/0`
+  without case sensitivity; values are normalized for the network core.
 - Signature tags `b`, `t`, `r`, `rc`, `rd`. Other tags are explicitly rejected.
 - Allocation limits: up to 128 junk packets, junk/padding/custom packet sizes up
   to 9000 bytes; `Jmin` must not exceed `Jmax`. Unsupported parameters are rejected.

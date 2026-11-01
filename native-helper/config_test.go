@@ -27,6 +27,34 @@ func TestParseConfig(t *testing.T) {
 		t.Fatal("AWG config not detected")
 	}
 }
+
+func TestAWGBooleanSpellings(t *testing.T) {
+	for _, field := range []string{"RandomTrailers", "DisableCookies"} {
+		for input, normalized := range map[string]string{
+			"on": "1", "off": "0", "true": "1", "false": "0", "1": "1", "0": "0",
+			"ON": "1", "Off": "0", "TRUE": "1", "False": "0",
+		} {
+			t.Run(field+"/"+input, func(t *testing.T) {
+				raw := strings.Replace(sampleConfig(), "Address =", field+" = "+input+"\nAddress =", 1)
+				config, err := parseConfig(raw)
+				if err != nil {
+					t.Fatalf("supported boolean rejected: %v", err)
+				}
+				wanted := awgKeys[strings.ToLower(field)] + "=" + normalized
+				if config.Protocol != "amneziawg" || !strings.Contains(strings.Join(config.Device, "\n"), wanted) {
+					t.Fatal("boolean was not normalized for the AWG core")
+				}
+			})
+		}
+		for _, invalid := range []string{"enable", "disable", "2", "-1", "secret-invalid-value"} {
+			raw := strings.Replace(sampleConfig(), "Address =", field+" = "+invalid+"\nAddress =", 1)
+			_, err := parseConfig(raw)
+			if err == nil || strings.Contains(err.Error(), invalid) {
+				t.Fatal("invalid boolean accepted or its value leaked in an error")
+			}
+		}
+	}
+}
 func TestRejectUnsafeAndUnsupportedConfig(t *testing.T) {
 	tests := map[string]string{
 		"shell hook":      strings.Replace(sampleConfig(), "Address =", "PostUp = powershell.exe bad\nAddress =", 1),

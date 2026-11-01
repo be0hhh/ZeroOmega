@@ -143,14 +143,13 @@ func parseConfig(raw string) (*Config, error) {
 					}
 					val = v
 				case key == "randomtrailers" || key == "disablecookies":
-					if val == "true" {
+					switch strings.ToLower(val) {
+					case "true", "1", "on":
 						val = "1"
-					}
-					if val == "false" {
+					case "false", "0", "off":
 						val = "0"
-					}
-					if val != "0" && val != "1" {
-						return fail(errors.New("boolean must be true or false"))
+					default:
+						return fail(errors.New("boolean must be on/off, true/false, or 1/0"))
 					}
 				case strings.HasPrefix(key, "i") && len(key) == 2:
 					if err := validateSignature(val); err != nil {

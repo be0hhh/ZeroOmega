@@ -9,7 +9,7 @@ import (
 
 const maxMessageSize = 1 << 20
 const protocolVersion = 1
-const helperVersion = "0.1.1"
+const helperVersion = "0.1.2"
 
 type Request struct {
 	ID       string `json:"id"`
